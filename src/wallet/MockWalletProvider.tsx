@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState, type ReactNode } from 'react'
 import { WalletModal } from '../components/WalletModal'
+import { NETWORKS } from './config'
 import { WalletContext, type WalletState } from './context'
 
 export function MockWalletProvider({ children }: { children: ReactNode }) {
@@ -15,9 +16,12 @@ export function MockWalletProvider({ children }: { children: ReactNode }) {
     () => ({
       address: account?.address ?? null,
       connectorName: account?.name ?? null,
+      connectorIcon: null,
+      networkName: account ? NETWORKS[0].name : null,
       isConnected: account !== null,
       isMock: true,
       open: () => setModalOpen(true),
+      openNetworks: () => undefined,
       disconnect: () => setAccount(null),
     }),
     [account],

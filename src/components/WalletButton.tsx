@@ -9,9 +9,14 @@ export function WalletButton() {
 
   if (wallet.isConnected && wallet.address) {
     return (
-      <button type="button" className="wallet-chip" onClick={() => navigate('/perfil')} title={wallet.connectorName ?? 'Wallet'}>
+      <button
+        type="button"
+        className="wallet-chip"
+        onClick={() => navigate('/perfil')}
+        title={[wallet.connectorName ?? 'Wallet', wallet.networkName].filter(Boolean).join(' · ')}
+      >
         <span className="wallet-chip__icon">
-          <Icon name="wallet" size={14} />
+          {wallet.connectorIcon ? <img src={wallet.connectorIcon} alt="" /> : <Icon name="wallet" size={14} />}
         </span>
         {shortAddress(wallet.address)}
         <span className="wallet-chip__live" />

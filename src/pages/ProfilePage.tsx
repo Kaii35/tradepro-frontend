@@ -32,15 +32,29 @@ export default function ProfilePage() {
         {wallet.isConnected && wallet.address ? (
           <div className="wallet-row">
             <span className="wallet-chip__icon wallet-chip__icon--lg">
-              <Icon name="wallet" />
+              {wallet.connectorIcon ? <img src={wallet.connectorIcon} alt="" /> : <Icon name="wallet" />}
             </span>
             <div className="wallet-row__text">
               <strong>{wallet.connectorName ?? 'Wallet'}</strong>
               <span className="mono small muted">{shortAddress(wallet.address)}</span>
             </div>
-            <button type="button" className="btn btn--sm btn--danger" onClick={wallet.disconnect}>
-              Desconectar
-            </button>
+            <div className="wallet-row__actions">
+              {wallet.networkName && (
+                <button
+                  type="button"
+                  className="btn btn--sm btn--ghost"
+                  onClick={wallet.openNetworks}
+                  disabled={wallet.isMock}
+                  title={wallet.isMock ? 'Disponible con WalletConnect real' : 'Cambiar red'}
+                >
+                  <Icon name="network" size={14} />
+                  {wallet.networkName}
+                </button>
+              )}
+              <button type="button" className="btn btn--sm btn--danger" onClick={wallet.disconnect}>
+                Desconectar
+              </button>
+            </div>
           </div>
         ) : (
           <button type="button" className="btn btn--primary btn--block" onClick={wallet.open}>

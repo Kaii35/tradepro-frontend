@@ -1,38 +1,14 @@
 import { useMemo, useState, type ReactNode } from 'react'
-import { createAppKit, useAppKit, useAppKitAccount, useDisconnect, useWalletInfo } from '@reown/appkit/react'
-import { WagmiAdapter } from '@reown/appkit-adapter-wagmi'
-import { arbitrum, bsc, mainnet, polygon, type AppKitNetwork } from '@reown/appkit/networks'
+import { useAppKit, useAppKitAccount, useAppKitNetwork, useDisconnect, useWalletInfo } from '@reown/appkit/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { WagmiProvider } from 'wagmi'
-import { APP_NAME } from '../config'
+import { initAppKit } from './appkit'
 import { WalletContext, type WalletState } from './context'
 
-const networks: [AppKitNetwork, ...AppKitNetwork[]] = [mainnet, polygon, arbitrum, bsc]
 const queryClient = new QueryClient()
-let adapter: WagmiAdapter | null = null
-
-function init(projectId: string): WagmiAdapter {
-  if (adapter) return adapter
-  adapter = new WagmiAdapter({ networks, projectId })
-  createAppKit({
-    adapters: [adapter],
-    networks,
-    projectId,
-    metadata: {
-      name: APP_NAME,
-      description: 'Panel del bot de trading',
-      url: window.location.origin,
-      icons: [],
-    },
-    themeMode: 'dark',
-    themeVariables: { '--w3m-accent': '#3B82F6', '--w3m-border-radius-master': '2px' },
-    features: { analytics: false, email: false, socials: false },
-  })
-  return adapter
-}
 
 export function AppKitWalletProvider({ projectId, children }: { projectId: string; children: ReactNode }) {
-  const [wagmiAdapter] = useState(() => init(projectId))
+  const [wagmiAdapter] = useState(() => initAppKit(projectId))
   return (
     <WagmiProvider config={wagmiAdapter.wagmiConfig}>
       <QueryClientProvider client={queryClient}>
@@ -42,9 +18,11 @@ export function AppKitWalletProvider({ projectId, children }: { projectId: strin
   )
 }
 
+/** Traduce los hooks de AppKit al WalletState común de la app. */
 function Bridge({ children }: { children: ReactNode }) {
   const { open } = useAppKit()
   const { address, isConnected } = useAppKitAccount()
+  const { caipNetwork } = useAppKitNetwork()
   const { disconnect } = useDisconnect()
   const { walletInfo } = useWalletInfo()
 
@@ -52,12 +30,15 @@ function Bridge({ children }: { children: ReactNode }) {
     () => ({
       address: address ?? null,
       connectorName: walletInfo?.name ?? null,
+      connectorIcon: walletInfo?.icon ?? null,
+      networkName: caipNetwork?.name ?? null,
       isConnected,
       isMock: false,
-      open: () => void open(),
+      open: () => void open({ view: isConnected ? 'Account' : 'Connect' }),
+      openNetworks: () => void open({ view: 'Networks' }),
       disconnect: () => void disconnect(),
     }),
-    [address, isConnected, walletInfo, open, disconnect],
+    [address, isConnected, walletInfo, caipNetwork, open, disconnect],
   )
 
   return <WalletContext.Provider value={value}>{children}</WalletContext.Provider>

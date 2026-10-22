@@ -9,6 +9,9 @@ const PATHS = {
   down: 'M12 5v14M5 12l7 7 7-7',
   up: 'M12 19V5M5 12l7-7 7 7',
   close: 'M18 6 6 18M6 6l12 12',
+  back: 'M15 18l-6-6 6-6',
+  shield: 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z',
+  network: 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20',
   pause: 'M8 5v14M16 5v14',
   play: 'M7 4l13 8-13 8z',
 } as const

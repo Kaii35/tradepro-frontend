@@ -62,7 +62,25 @@ Las formas de cada respuesta están en `src/types.ts`.
 
 ## WalletConnect
 
-Con `VITE_WC_PROJECT_ID` definido, el botón "Conectar wallet" abre el modal oficial de Reown AppKit (MetaMask, WalletConnect QR, Coinbase, Trust…) en Ethereum, Polygon, Arbitrum y BNB Chain. Las redes se configuran en `src/wallet/AppKitWalletProvider.tsx`.
+Toda la configuración está en [`src/wallet/config.ts`](src/wallet/config.ts):
+
+- **Wallets destacadas:** Core y MetaMask aparecen primero (`FEATURED_WALLET_IDS`).
+- **Resto de wallets:** el botón "Todas las wallets" muestra las 500+ del registro de WalletConnect (Trust, Coinbase, Rabby, OKX, Ledger…). También se detectan las extensiones instaladas en el navegador y se puede escanear un QR con wallets móviles.
+- **Redes:** Ethereum, Avalanche, Polygon, Arbitrum, Base, Optimism y BNB Chain (`NETWORKS`; la primera es la red por defecto).
+- **Tema:** colores, fuente y bordes alineados con la app (`THEME_VARIABLES`).
+
+Para cambiar las wallets destacadas, copia el ID desde [Reown Cloud](https://cloud.reown.com) → *Wallets List* (clic en la wallet) o desde [WalletGuide](https://walletguide.walletconnect.network) y agrégalo a `WALLET_IDS`.
+
+Estructura de `src/wallet/`:
+
+~~~
+config.ts                 Redes, wallets, tema y metadatos
+appkit.ts                 createAppKit (se inicializa una sola vez)
+AppKitWalletProvider.tsx  WalletConnect real (wagmi + react-query)
+MockWalletProvider.tsx    Modal simulado si no hay VITE_WC_PROJECT_ID
+WalletProvider.tsx        Elige real o simulado
+context.ts                Hook useWallet() que usa el resto de la app
+~~~
 
 Para iniciar sesión solo con wallet en producción, pide al usuario que firme un mensaje (SIWE) y verifícalo en el backend antes de emitir el token.
 
