@@ -67,7 +67,8 @@ Toda la configuración está en [`src/wallet/config.ts`](src/wallet/config.ts):
 - **Wallets destacadas:** Core y MetaMask aparecen primero (`FEATURED_WALLET_IDS`).
 - **Resto de wallets:** el botón "Todas las wallets" muestra las 500+ del registro de WalletConnect (Trust, Coinbase, Rabby, OKX, Ledger…). También se detectan las extensiones instaladas en el navegador y se puede escanear un QR con wallets móviles.
 - **Redes:** Ethereum, Avalanche, Polygon, Arbitrum, Base, Optimism y BNB Chain (`NETWORKS`; la primera es la red por defecto).
-- **Tema:** colores, fuente y bordes alineados con la app (`THEME_VARIABLES`).
+- **Tema:** modal negro con el acento azul de la app (`THEME_VARIABLES`).
+- **Modo demo:** sin `VITE_WC_PROJECT_ID` se usa un modal propio con el mismo estilo (`src/components/WalletModal.tsx`): recomendadas, búsqueda en "Todas las wallets" y detección de extensiones instaladas (EIP-6963). Los íconos están en `public/wallets/` (de RainbowKit, licencia MIT).
 
 Para cambiar las wallets destacadas, copia el ID desde [Reown Cloud](https://cloud.reown.com) → *Wallets List* (clic en la wallet) o desde [WalletGuide](https://walletguide.walletconnect.network) y agrégalo a `WALLET_IDS`.
 

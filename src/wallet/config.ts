@@ -52,34 +52,45 @@ export const METADATA = {
   icons: [typeof window !== 'undefined' ? `${window.location.origin}/logo.svg` : ''],
 }
 
-/** Tema del modal, alineado con los tokens de src/styles/global.css. */
+/** Tema del modal real: negro (modo oscuro por defecto de AppKit) con el acento de la app. */
 export const THEME_VARIABLES: ThemeVariables = {
   '--w3m-accent': '#3B82F6',
-  '--w3m-color-mix': '#060A16',
-  '--w3m-color-mix-strength': 25,
   '--w3m-font-family': "'Plus Jakarta Sans', system-ui, sans-serif",
-  '--w3m-border-radius-master': '3px',
   '--w3m-z-index': 1000,
 }
 
+/** Enlace "¿No tienes wallet?" del modal. */
+export const GET_WALLET_URL = 'https://walletguide.walletconnect.network'
+
 /**
- * Lista del modal simulado (sin VITE_WC_PROJECT_ID). Imita el orden del modal real:
- * destacadas primero y luego otras populares.
+ * Wallets del modal simulado (sin VITE_WC_PROJECT_ID). Imita el modal real:
+ * destacadas primero, luego populares, y el resto en "Todas las wallets".
+ * Los íconos están en public/wallets (tomados de RainbowKit, licencia MIT).
  */
 export interface DemoWallet {
+  id: string
   name: string
-  initial: string
-  color: string
-  note?: string
+  icon: string
+  /** Identificador EIP-6963 de la extensión, para marcarla como instalada. */
+  rdns?: string
   featured?: boolean
+  /** Visible en la primera pantalla (si no, solo en "Todas las wallets"). */
+  popular?: boolean
+  qr?: boolean
 }
 
+const icon = (id: string) => `${import.meta.env.BASE_URL}wallets/${id}.svg`
+
 export const DEMO_WALLETS: DemoWallet[] = [
-  { name: 'Core', initial: 'C', color: '#E84142', note: 'Avalanche', featured: true },
-  { name: 'MetaMask', initial: 'M', color: '#E2761B', note: 'Extensión', featured: true },
-  { name: 'WalletConnect', initial: 'W', color: '#3B99FC', note: 'QR · Móvil' },
-  { name: 'Coinbase Wallet', initial: 'C', color: '#0052FF' },
-  { name: 'Trust Wallet', initial: 'T', color: '#3375BB', note: 'Móvil' },
-  { name: 'Rabby', initial: 'R', color: '#7084FF', note: 'Extensión' },
-  { name: 'OKX Wallet', initial: 'O', color: '#1B1B1B' },
+  { id: 'core', name: 'Core', icon: icon('core'), rdns: 'app.core.extension', featured: true },
+  { id: 'metamask', name: 'MetaMask', icon: icon('metamask'), rdns: 'io.metamask', featured: true },
+  { id: 'walletconnect', name: 'WalletConnect', icon: icon('walletconnect'), popular: true, qr: true },
+  { id: 'coinbase', name: 'Coinbase Wallet', icon: icon('coinbase'), rdns: 'com.coinbase.wallet', popular: true },
+  { id: 'trust', name: 'Trust Wallet', icon: icon('trust'), rdns: 'com.trustwallet.app', popular: true },
+  { id: 'rabby', name: 'Rabby', icon: icon('rabby'), rdns: 'io.rabby' },
+  { id: 'okx', name: 'OKX Wallet', icon: icon('okx'), rdns: 'com.okex.wallet' },
+  { id: 'phantom', name: 'Phantom', icon: icon('phantom'), rdns: 'app.phantom' },
+  { id: 'rainbow', name: 'Rainbow', icon: icon('rainbow'), rdns: 'me.rainbow' },
+  { id: 'ledger', name: 'Ledger Live', icon: icon('ledger') },
+  { id: 'brave', name: 'Brave Wallet', icon: icon('brave'), rdns: 'com.brave.wallet' },
 ]
